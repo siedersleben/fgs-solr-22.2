@@ -44,6 +44,8 @@ import org.apache.lucene.store.FSDirectory;
 import dk.defxws.fedoragsearch.server.GTransformer;
 import dk.defxws.fedoragsearch.server.GenericOperationsImpl;
 import dk.defxws.fedoragsearch.server.errors.GenericSearchException;
+import dk.defxws.fedoragsearch.server.utils.IOUtils;
+import dk.defxws.fedoragsearch.server.utils.Stream;
 
 import fedora.server.utilities.StreamUtility;
 
@@ -104,10 +106,11 @@ public class OperationsImpl extends GenericOperationsImpl {
         params[12] = "RESULTPAGEXSLT";
         params[13] = resultPageXslt;
         String xsltPath = config.getConfigName()+"/index/"+usingIndexName+"/"+config.getGfindObjectsResultXslt(usingIndexName, resultPageXslt);
-        StringBuffer resultXml = (new GTransformer()).transform(
+        Stream stream = (new GTransformer()).transform(
         		xsltPath,
         		resultSet.getResultXml(),
                 params);
+        StringBuffer resultXml = IOUtils.convertStreamToStringBuffer(stream);
         if (srf != null && config.isSearchResultFilteringActive("postsearch")) {
         	resultXml = srf.filterResultsetForPostsearch(fgsUserName, resultXml, config);
             if (logger.isDebugEnabled())
@@ -183,10 +186,12 @@ public class OperationsImpl extends GenericOperationsImpl {
         params[10] = "RESULTPAGEXSLT";
         params[11] = resultPageXslt;
         String xsltPath = config.getConfigName()+"/index/"+config.getIndexName(indexName)+"/"+config.getBrowseIndexResultXslt(indexName, resultPageXslt);
-        StringBuffer sb = (new GTransformer()).transform(
+        Stream stream = (new GTransformer()).transform(
         		xsltPath,
                 resultXml,
                 params);
+        StringBuffer sb = IOUtils.convertStreamToStringBuffer(stream);
+
         return sb.toString();
     }
     
@@ -206,10 +211,11 @@ public class OperationsImpl extends GenericOperationsImpl {
             throw new GenericSearchException("Error "+indexInfoPath+" not found in classpath", e);
         }
         String xsltPath = config.getConfigName()+"/index/"+config.getIndexName(indexName)+"/"+config.getIndexInfoResultXslt(indexName, resultPageXslt);
-        StringBuffer sb = (new GTransformer()).transform(
+        Stream stream = (new GTransformer()).transform(
         		xsltPath,
                 new StreamSource(infoStream),
                 new String[] {});
+        StringBuffer sb = IOUtils.convertStreamToStringBuffer(stream);
         return sb.toString();
     }
     
@@ -288,10 +294,11 @@ public class OperationsImpl extends GenericOperationsImpl {
         params[10] = "RESULTPAGEXSLT";
         params[11] = resultPageXslt;
         String xsltPath = config.getConfigName()+"/index/"+config.getIndexName(indexName)+"/"+config.getUpdateIndexResultXslt(indexName, resultPageXslt);
-        StringBuffer sb = (new GTransformer()).transform(
+        Stream stream = (new GTransformer()).transform(
         		xsltPath,
                 resultXml,
                 params);
+        StringBuffer sb = IOUtils.convertStreamToStringBuffer(stream);
         return sb.toString();
     }
     
@@ -442,11 +449,12 @@ public class OperationsImpl extends GenericOperationsImpl {
         //MIH: call method getStylesheetPath
 //      String xsltPath = config.getConfigName()+"/index/"+indexName+"/"+config.getUpdateIndexDocXslt(indexName, xsltName);
         String xsltPath = getUpdateIndexDocXsltPath(xsltName);
-        StringBuffer sb = (new GTransformer()).transform(
+        Stream stream = (new GTransformer()).transform(
         		xsltPath, 
                 new StreamSource(foxmlStream),
                 config.getURIResolver(indexName),
                 params);
+        StringBuffer sb = IOUtils.convertStreamToStringBuffer(stream);
         if (logger.isDebugEnabled())
             logger.debug("indexDoc=\n"+sb.toString());
         if (sb.indexOf("name=\""+UNIQUEKEY) > 0) {
