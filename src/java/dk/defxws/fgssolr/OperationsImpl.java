@@ -607,38 +607,38 @@ public class OperationsImpl extends GenericOperationsImpl {
     
     private void getIndexReader(String indexName)
     throws GenericSearchException {
-		IndexReader irreopened = null;
-		if (ir != null) {
-	    	try {
-				irreopened = ir.reopen();
-			} catch (CorruptIndexException e) {
-				throw new GenericSearchException("IndexReader reopen error indexName=" + indexName+ " :\n", e);
-			} catch (IOException e) {
-				throw new GenericSearchException("IndexReader reopen error indexName=" + indexName+ " :\n", e);
-			}
-			if (ir != irreopened){
-				try {
-					ir.close();
-				} catch (IOException e) {
-					ir = null;
-					throw new GenericSearchException("IndexReader close after reopen error indexName=" + indexName+ " :\n", e);
-				}
-				ir = irreopened;
-			}
-		} else {
-	        try {
-				ir = IndexReader.open(
-                        FSDirectory.open(
-                                new File(config.getIndexDir(indexName))), false);
-			} catch (CorruptIndexException e) {
-				throw new GenericSearchException("IndexReader open error indexName=" + indexName+ " :\n", e);
-			} catch (IOException e) {
-				throw new GenericSearchException("IndexReader open error indexName=" + indexName+ " :\n", e);
-			}
-		}
-        docCount = ir.numDocs();
-    	if (logger.isDebugEnabled())
-    		logger.debug("getIndexReader indexName=" + indexName+ " docCount=" + docCount);
+//		IndexReader irreopened = null;
+//		if (ir != null) {
+//	    	try {
+//				irreopened = ir.reopen();
+//			} catch (CorruptIndexException e) {
+//				throw new GenericSearchException("IndexReader reopen error indexName=" + indexName+ " :\n", e);
+//			} catch (IOException e) {
+//				throw new GenericSearchException("IndexReader reopen error indexName=" + indexName+ " :\n", e);
+//			}
+//			if (ir != irreopened){
+//				try {
+//					ir.close();
+//				} catch (IOException e) {
+//					ir = null;
+//					throw new GenericSearchException("IndexReader close after reopen error indexName=" + indexName+ " :\n", e);
+//				}
+//				ir = irreopened;
+//			}
+//		} else {
+//	        try {
+//				ir = IndexReader.open(
+//                        FSDirectory.open(
+//                                new File(config.getIndexDir(indexName))), false);
+//			} catch (CorruptIndexException e) {
+//				throw new GenericSearchException("IndexReader open error indexName=" + indexName+ " :\n", e);
+//			} catch (IOException e) {
+//				throw new GenericSearchException("IndexReader open error indexName=" + indexName+ " :\n", e);
+//			}
+//		}
+//        docCount = ir.numDocs();
+//    	if (logger.isDebugEnabled())
+//    		logger.debug("getIndexReader indexName=" + indexName+ " docCount=" + docCount);
     }
     
     private void closeIndexReader(String indexName)
