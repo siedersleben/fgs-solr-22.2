@@ -658,17 +658,18 @@ public class OperationsImpl extends GenericOperationsImpl {
     }
     
     private long indexDirSpace(File dir) {
-    	long ids = 0;
-        File[] files = dir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-        	File f = files[i];
-            if (f.isDirectory()) {
-            	ids += indexDirSpace(f);
-            } else {
-            	ids += f.length();
-            }
-        }
-		return ids;
+//    	long ids = 0;
+//        File[] files = dir.listFiles();
+//        for (int i = 0; i < files.length; i++) {
+//        	File f = files[i];
+//            if (f.isDirectory()) {
+//            	ids += indexDirSpace(f);
+//            } else {
+//            	ids += f.length();
+//            }
+//        }
+//		return ids;
+    	return 0;
     }
     
 }
