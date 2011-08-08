@@ -31,7 +31,8 @@ import java.util.TreeSet;
 
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
@@ -57,7 +58,7 @@ import fedora.server.utilities.StreamUtility;
  */
 public class OperationsImpl extends GenericOperationsImpl {
     
-    private static final Logger logger = Logger.getLogger(OperationsImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(OperationsImpl.class);
     
     private static final String UNIQUEKEY = "PID";
     
