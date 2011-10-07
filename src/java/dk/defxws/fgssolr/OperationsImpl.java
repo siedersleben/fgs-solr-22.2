@@ -7,7 +7,6 @@
  */
 package dk.defxws.fgssolr;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -391,8 +390,21 @@ public class OperationsImpl extends GenericOperationsImpl {
             String indexDocXslt)
     throws java.rmi.RemoteException {
     	if (pid==null || pid.length()<1) return;
-		getFoxmlFromPid(pid, repositoryName);
-        indexDoc(pid, repositoryName, indexName, new ByteArrayInputStream(foxmlRecord), resultXml, indexDocXslt);
+
+
+    	File tempFile = getFoxmlFromPid(pid, repositoryName);
+		FileInputStream ins = null;
+		
+		try {
+			ins = new FileInputStream(tempFile);
+		} catch (FileNotFoundException e) {
+			throw new java.rmi.RemoteException("Temporary file '" + tempFile + "' not found.", e);
+		}
+		indexDoc(pid, repositoryName, indexName, ins, resultXml, indexDocXslt);
+
+        if(tempFile != null) {
+        	tempFile.delete();
+        }
     }
     
     private void indexDoc(
@@ -509,14 +521,14 @@ public class OperationsImpl extends GenericOperationsImpl {
      * Reads data from the data reader and posts it to solr,
      * writes the response to output
      */
-    private void postData(String solrUrlString, Reader data, StringBuffer output)
+    private void postData(final String solrUrlString, Reader data, StringBuffer output)
     throws GenericSearchException {
 
       URL solrUrl = null;
 	try {
 		solrUrl = new URL(solrUrlString);
 	} catch (MalformedURLException e) {
-        throw new GenericSearchException("solrUrl="+solrUrl.toString()+": ", e);
+        throw new GenericSearchException("solrUrl="+solrUrlString+": ", e);
 	}
       HttpURLConnection urlc = null;
       String POST_ENCODING = "UTF-8";
