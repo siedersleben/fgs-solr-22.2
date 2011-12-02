@@ -223,7 +223,8 @@ public class OperationsImpl extends GenericOperationsImpl {
             String repositoryName,
             String indexName,
             String indexDocXslt,
-            String resultPageXslt)
+            String resultPageXslt,
+            boolean commit)
     throws java.rmi.RemoteException {
         insertTotal = 0;
         updateTotal = 0;
